@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanskrit Search Tool</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Sanskrit Search Tool</h1>
+    <form id="searchForm" method="POST">
+        <label for="search_term">Enter Search Term:</label>
+        <input type="text" id="search_term" name="search_term" required><br><br>
+
+        <label for="search_type">Select Search Type:</label>
+        <select id="search_type" name="search_type" required>
+            <option value="starts_with">Starts With</option>
+            <option value="ends_with">Ends With</option>
+            <option value="select_position">Select Position</option>
+        </select><br><br>
+
+        <label for="position" id="positionLabel" style="display:none;">Enter Position:</label>
+        <input type="number" id="position" name="position" style="display:none;"><br><br>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="results">
+        <h2>Results</h2>
+        <pre id="resultBox"></pre>
+    </div>
+
+    <script>
+        const searchType = document.getElementById('search_type');
+        const positionInput = document.getElementById('position');
+        const positionLabel = document.getElementById('positionLabel');
+
+        searchType.addEventListener('change', function() {
+            if (this.value === 'select_position') {
+                positionInput.style.display = 'block';
+                positionLabel.style.display = 'block';
+            } else {
+                positionInput.style.display = 'none';
+                positionLabel.style.display = 'none';
+            }
+        });
+
+        const form = document.getElementById('searchForm');
+        const resultBox = document.getElementById('resultBox');
+
+        form.onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            const response = await fetch('/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            resultBox.textContent = JSON.stringify(result.results, null, 2);
+        };
+    </script>
+</body>
+</html>
