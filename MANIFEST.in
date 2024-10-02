@@ -1,2 +1,4 @@
 recursive-include templates *.html
 recursive-include static *.css *.js
+recursive-include data *.csv
+recursive-include data *.json
